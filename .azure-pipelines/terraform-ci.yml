@@ -12,10 +12,7 @@ stages:
   jobs:
   - job: TerraformCI
     steps:
-    - task: DownloadSecureFile@1
-      name: tfvars
-      inputs:
-        secureFile: 'terraform.tfvars'  # Optional, if you're using it
+
 
     - script: |
         echo "Installing Terraform"
