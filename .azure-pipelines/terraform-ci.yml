@@ -12,12 +12,27 @@ stages:
   jobs:
   - job: TerraformCI
     steps:
-    - task: UseTerraform@0
+    - task: DownloadSecureFile@1
+      name: tfvars
       inputs:
-        terraformVersion: '1.5.0'
+        secureFile: 'terraform.tfvars'  # Optional, if you're using it
+
+    - script: |
+        echo "Installing Terraform"
+        curl -sLo terraform.zip https://releases.hashicorp.com/terraform/1.5.7/terraform_1.5.7_linux_amd64.zip
+        unzip terraform.zip
+        sudo mv terraform /usr/local/bin/
+        terraform -version
+      displayName: 'Install Terraform'
+
     - script: terraform init
       workingDirectory: terraform/
+      displayName: 'Terraform Init'
+
     - script: terraform validate
       workingDirectory: terraform/
+      displayName: 'Terraform Validate'
+
     - script: terraform plan -out=tfplan
       workingDirectory: terraform/
+      displayName: 'Terraform Plan'
